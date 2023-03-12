@@ -39,7 +39,8 @@ jobs:
       - name: Install dependendencies
         run: |
           pip install poetry
-          poetry install
+          ls
+          # poetry install
 
       - name: flake8 checks
         run: poetry run black .
