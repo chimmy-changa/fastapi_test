@@ -12,6 +12,7 @@ python = "^3.8"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"
+pytest = "^5.4.1"
 
 [build-system]
 requires = ["poetry-core"]
