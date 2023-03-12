@@ -1,0 +1,52 @@
+
+# Would be triggered for every push to all branches other than main.
+
+name: Testing workflow
+
+on:
+  # Trigger workflow both manually and pushing to branches other than main
+  workflow_dispatch:
+  push:
+    branches-ignore:
+      - "main"
+        
+  # In the event that we run out of free minutes for the tm2space account, 
+  # comment above 2 lines and uncomment below 2 lines. 
+  # Actions would be triggered only when a PR is opened.
+
+  # pull_request:
+  #   types: [opened]
+
+jobs:
+  python_tests:
+    runs-on: ubuntu-latest
+    strategy:
+      # If tests fail for a version, dont run subsequent jobs
+      fail-fast: true
+      matrix:
+        version: ['3.7', '3.8', '3.9', '3.10']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.version }}
+
+
+      - name: Setup poetry
+        run: curl -sSL https://install.python-poetry.org | python3 -
+
+      - name: Install dependendencies
+        run: |
+          pip install poetry
+          poetry install
+
+      - name: flake8 checks
+        run: poetry run black .
+        # run: poetry run flake8 --exclude=venv,.git  --recursive . 
+
+      - name: Test with pytest
+        run: poetry run pytest
