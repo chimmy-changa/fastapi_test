@@ -39,7 +39,7 @@ jobs:
       - name: Install dependendencies
         run: |
           pip install poetry
-          ls
+          poetry install --no-root
           # poetry install
 
       - name: flake8 checks
